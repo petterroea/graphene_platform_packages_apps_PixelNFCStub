@@ -1,0 +1,8 @@
+android_app {
+    name: "PixelNFCStub",
+    platform_apis: true,
+    srcs: [
+        "src/**/*.java",
+    ],
+    manifest: "AndroidManifest.xml",
+}

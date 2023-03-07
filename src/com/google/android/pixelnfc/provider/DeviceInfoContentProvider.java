@@ -10,9 +10,6 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
@@ -30,20 +27,24 @@ public class DeviceInfoContentProvider extends ContentProvider {
 
     private boolean isJapanSku() {
         String[] validSkus = {
-            "G020D", //Pixel 3a XL
-            "G020N", //Pixel 4
-            "G020N", //Pixel 4 XL
-            "G025M", //Pixel 4a
-            "G025H", //Pixel 4a 5G
-            "G5NZ6", //Pixel 5
-            "G4S1M", //Pixel 5a
-            "GR1YH", //Pixel 6
-            "GF5KQ", //Pixel 6 Pro
-            "GB17L", //Pixel 6a
-            "GO3Z5", //Pixel 7
-            "GFE4J", //Pixel 7 Pro
+            // Taken from reverse engineered PixelNfc app
+            "G020N", // Pixel 4
+            "G020Q", // Pixel 4 XL
+            "G025M", // Pixel 4a
+            "G025H", // Pixel 4a 5G
+            "G5NZ6", // Pixel 5
+            "G4S1M", // Pixel 5a
+            "GR1YH", // Pixel 6
+            "GF5KQ", // Pixel 6 Pro
+            "GPQ72", // ??? Unreleased Pixel
+            "GB17L", // Pixel 6a
+            "GO3Z5", // Pixel 7
+            "GFE4J", // Pixel 7 Pro
+            "G82U8", // ??? Unreleased Pixel
+            "G0B96", // ??? Unreleased Pixel
         };
-        // Get system sku using reflection (Since the class is hidden)
+        
+        // TODO: Import android.os.SystemProperties instead rather than using reflection
         Class<?> c = null;
         try {
             c = Class.forName("android.os.SystemProperties");
@@ -89,9 +90,8 @@ public class DeviceInfoContentProvider extends ContentProvider {
         return false;
     }
 
-    @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
+    public Cursor query(Uri uri, String[] strings, String s, String[] strings1, String s1) {
         UriMatcher matcher = new UriMatcher(-1);
         matcher.addURI("com.google.android.pixelnfc.provider.DeviceInfoContentProvider", "isJapanSku", 1);
         if(matcher.match(uri) == 1) {
@@ -107,25 +107,23 @@ public class DeviceInfoContentProvider extends ContentProvider {
         return null;
     }
 
-    @Nullable
     @Override
-    public String getType(@NonNull Uri uri) {
+    public String getType(Uri uri) {
         return null;
     }
 
-    @Nullable
     @Override
-    public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
+    public Uri insert(Uri uri, ContentValues contentValues) {
         throw new UnsupportedOperationException("Not supported");
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
+    public int delete(Uri uri, String s, String[] strings) {
         throw new UnsupportedOperationException("Not supported");
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
+    public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
         throw new UnsupportedOperationException("Not supported");
     }
 }
