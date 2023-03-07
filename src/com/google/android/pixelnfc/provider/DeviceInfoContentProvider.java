@@ -10,6 +10,8 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
 
+import android.os.SystemProperties;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
@@ -44,19 +46,10 @@ public class DeviceInfoContentProvider extends ContentProvider {
             "G0B96", // ??? Unreleased Pixel
         };
         
-        // TODO: Import android.os.SystemProperties instead rather than using reflection
-        Class<?> c = null;
-        try {
-            c = Class.forName("android.os.SystemProperties");
-            Method set = c.getMethod("get", String.class);
-            String systemSku = (String)set.invoke(c, "ro.boot.hardware.sku" );
-            Log.i(this.getClass().getName(), "SKU: " + systemSku);
+	    String systemSku = SystemProperties.get("ro.boot.hardware.sku");
+	    Log.i(this.getClass().getName(), "SKU: " + systemSku);
 
-            return Arrays.asList(validSkus).contains(systemSku);
-        } catch (Exception e) {
-            Log.w(this.getClass().getName(), "Unable to fetch system sku: " + e.toString());
-        }
-        return false;
+	    return Arrays.asList(validSkus).contains(systemSku);
     }
 
     /**
